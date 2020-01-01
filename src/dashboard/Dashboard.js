@@ -3,35 +3,51 @@ import React from 'react';
 import Display from '../display/Display';
 import Controls from '../controls/Controls';
 
-class Dashboard extends React.Component {
-  state = {
-    locked: false,
-    closed: false,
+import { connect } from 'react-redux';
+import { setOpen, setLocked } from '../actions/actions';
+
+const Dashboard = props => {
+  // state = {
+  //   locked: false,
+  //   closed: false,
+  // };
+
+  // render() {
+  //   const { closed, locked } = this.state;
+
+  const toggleLocked = () => {
+    // this.setState(prev => ({ locked: !prev.locked }));
+    const toggle = props.setLocked;
+    toggle(!props.unlocked)
   };
 
-  render() {
-    const { closed, locked } = this.state;
+   const toggleClosed = () => {
+    const toggle = props.setOpen;
+    toggle(!props.open)
+    // this.setState(prev => ({ closed: !prev.closed }));
+  };
+
+  console.log(props.open, props.unlocked)
 
     return (
       <>
-        <Display locked={locked} closed={closed} />
+        <Display locked={props.unlocked} closed={props.open} />
         <Controls
-          locked={locked}
-          closed={closed}
-          toggleLocked={this.toggleLocked}
-          toggleClosed={this.toggleClosed}
+          locked={props.unlocked}
+          closed={props.open}
+          toggleLocked={toggleLocked}
+          toggleClosed={toggleClosed}
         />
       </>
     );
   }
+// }
 
-  toggleLocked = () => {
-    this.setState(prev => ({ locked: !prev.locked }));
-  };
-
-  toggleClosed = () => {
-    this.setState(prev => ({ closed: !prev.closed }));
-  };
+const mapStateToProps = state => {
+  return {
+    open: state.open,
+    unlocked: state.unlocked,
+  }
 }
 
-export default Dashboard;
+export default connect(mapStateToProps, { setOpen, setLocked })(Dashboard)
